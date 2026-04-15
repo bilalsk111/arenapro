@@ -18,5 +18,5 @@ export function loginWithGoogle() {
 export function logout() {
   localStorage.removeItem("token");
   localStorage.removeItem("chatId");
-  window.location.href = "/login";
+  window.location.href = "https://arenapro.onrender.com/login";
 }
