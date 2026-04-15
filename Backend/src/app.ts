@@ -9,23 +9,18 @@ import { authMiddleware } from "./auth/auth.middleware.js";
 import morgan from "morgan";
 import "./auth/google.auth.js";
 import path from "path";
-import { fileURLToPath } from "url";
+import fs from "fs";
 
 const app = express();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const PUBLIC_DIR = path.join(process.cwd(), "public");
 
-app.use(cors({ origin: "https://arenapro.onrender.com", credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(passport.initialize());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan('dev'))
-app.use(cors({
-  origin: true, 
-  credentials: true, 
-}))
-app.use(express.static(path.join(__dirname, "../public")));
+app.use(morgan('dev'));
+app.use(express.static(PUBLIC_DIR));
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
 app.get("/auth/google",
@@ -114,10 +109,12 @@ app.delete("/chats/:id", authMiddleware, async (req: any, res) => {
 });
 
 app.use((_req, res) => {
-  const filePath = path.join(__dirname, "../public", "index.html");
-  console.log("FILEPATH:", filePath); // ← add kar
-  res.sendFile(filePath, (err) => {
-    if (err) console.log("SEND ERROR:", err); // ← aur yeh
-  });
+  const indexPath = path.join(PUBLIC_DIR, "index.html");
+  if (!fs.existsSync(indexPath)) {
+    console.error("index.html NOT FOUND at:", indexPath);
+    res.status(404).send("Frontend not built. index.html missing.");
+    return;
+  }
+  res.sendFile(indexPath);
 });
 export default app;
