@@ -113,12 +113,7 @@ app.delete("/chats/:id", authMiddleware, async (req: any, res) => {
   }
 });
 
-app.get("/", (_req, res) => res.send("AI Battle Arena API is running."));
-
-app.get("/{*path}", (_req, res) => {
-  const filePath = path.join(__dirname, "../public", "index.html");
-  console.log("PATH:", filePath); 
-  res.sendFile(filePath);
+app.use((_req, res) => {
+  res.sendFile(path.join(__dirname, "../public", "index.html"));
 });
-
 export default app;
