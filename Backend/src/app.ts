@@ -114,6 +114,10 @@ app.delete("/chats/:id", authMiddleware, async (req: any, res) => {
 });
 
 app.use((_req, res) => {
-  res.sendFile(path.join(__dirname, "../public", "index.html"));
+  const filePath = path.join(__dirname, "../public", "index.html");
+  console.log("FILEPATH:", filePath); // ← add kar
+  res.sendFile(filePath, (err) => {
+    if (err) console.log("SEND ERROR:", err); // ← aur yeh
+  });
 });
 export default app;
