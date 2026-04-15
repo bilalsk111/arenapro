@@ -8,8 +8,13 @@ import Chat from "./models/chat.model.js";
 import { authMiddleware } from "./auth/auth.middleware.js";
 import morgan from "morgan";
 import "./auth/google.auth.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(cors({ origin: "https://arenapro.onrender.com", credentials: true }));
 app.use(express.json());
@@ -20,7 +25,7 @@ app.use(cors({
   origin: true, 
   credentials: true, 
 }))
-app.use(express.static("./public"))
+app.use(express.static(path.join(__dirname, "../public")));
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
 app.get("/auth/google",
@@ -46,9 +51,6 @@ app.get("/auth/google/callback",
     res.redirect(`https://arenapro.onrender.com?token=${token}`);
   }
 );
-
-// NOTE: No /auth/logout route needed — JWT is stateless.
-// The frontend just removes the token from localStorage.
 
 // ─── Battle ───────────────────────────────────────────────────────────────────
 
@@ -112,5 +114,11 @@ app.delete("/chats/:id", authMiddleware, async (req: any, res) => {
 });
 
 app.get("/", (_req, res) => res.send("AI Battle Arena API is running."));
+
+app.get("/{*path}", (_req, res) => {
+  const filePath = path.join(__dirname, "../public", "index.html");
+  console.log("PATH:", filePath); 
+  res.sendFile(filePath);
+});
 
 export default app;
