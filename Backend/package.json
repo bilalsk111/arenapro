@@ -7,8 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch server.ts",
-    "build": "echo 'Skipping build'",
-  "start": "tsx server.ts"
+    "build": "cd ../Frontend && npm install && npm run build",
+    "start": "tsx server.ts"
   },
   "keywords": [],
   "author": "",
