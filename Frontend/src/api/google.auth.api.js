@@ -18,5 +18,5 @@ export function loginWithGoogle() {
 export function logout() {
   localStorage.removeItem("token");
   localStorage.removeItem("chatId");
-window.location.href = `${BASE_URL}/login`;
+window.location.href = `/login`;
 }
